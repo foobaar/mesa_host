@@ -1,6 +1,6 @@
 <ion-view title="Reservations">
   <ion-content padding="true">
-    <div class="reservation-list">
+    <div class="reservation-list padding">
       <div class="row">
         <div class="col">
           <h4 class="title">Name</h2>
@@ -14,21 +14,21 @@
       </div>
       <ion-item collection-repeat="reservation in reservations" ng-class="getReservationRowClass(reservation)">
         <div class="row">
-          <div class="col">
+          <div class="col text-middle">
             {{reservation.customerName}}
           </div>
-          <div class="col">
+          <div class="col text-middle">
             {{reservation.partySize}}
           </div>
           <div class="col">
             <div ng-hide="reservation.closed" class="reservation-controls">
-              <button ng-class="notifyButtonClass(reservation)" class="button">
+              <button ng-hide="reservation.seatingNow" ng-click="notifyCustomer(reservation)" class="button button-small">
                 Notify
               </button>
-              <button class="button button-balanced">
+              <button ng-click="closeReservation(reservation)" class="button button-small button-balanced">
                 Seated
               </button>
-              <button class="button button-assertive">
+              <button ng-click="closeReservation(reservation)" class="button button-small button-assertive">
                 Close
               </button>
             </div>

@@ -6,16 +6,12 @@ mesaControllers.controller('ReservationsCtrl', ['$scope', '$http', '$ionicModal'
     $http.get(rootUrl + '/reservations/senate_100')
     .then(function(resp) {
       resp.data.sort(function(a, b) {
-        if(a.seatingNow) {
-          return -1;
-        } else if(b.seatingNow) {
+        if(a.closed || b.seatingNow) {
           return 1;
-        } else if(a.closed) {
-          return 1;
-        } else if(b.closed) {
+        } else if(b.closed || a.seatingNow) {
           return -1;
         }
-        return 0;
+        return a.timestamp - b.timestamp;
       });
       $scope.reservations = resp.data;
       console.log(resp);
@@ -33,16 +29,23 @@ mesaControllers.controller('ReservationsCtrl', ['$scope', '$http', '$ionicModal'
       return "reservation-open";
     }
   };
-  $scope.notifyButtonClass = function(it) {
-    if(it == null || typeof it == 'undefined') {
-      return "";
-    } else if(it.seatingNow) {
-      return "button-light button-outline";
-    } else {
-      return "button-positive";
-    }
 
+  var doSomethingTo = function(reservation, action) {
+    var id = reservation.reservationId;
+    var url = rootUrl + '/reservations/' + id + action;
+    console.log(url);
+    $http.post(url)
+      .then(function(resp) {
+        $scope.getReservations(); 
+      });
   };
+  $scope.notifyCustomer = function(reservation) {
+    doSomethingTo(reservation, '/notify');
+  };
+  $scope.closeReservation = function(reservation) {
+    doSomethingTo(reservation, '/close');
+  };
+
   $ionicModal.fromTemplateUrl('partials/add_reservation_modal.html', {
     scope: $scope,
     animation: 'slide-in-up'

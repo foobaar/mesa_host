@@ -12,3 +12,8 @@
 .reservation-open {
   /*background-color: #DDD;*/
 }
+
+.text-middle {
+  display: flex;
+  align-items: center; /* align vertical */
+}

@@ -26,5 +26,5 @@ angular.module('starter', ['ionic', 'mesaControllers', 'mesaServices'])
     controller: 'ReservationsCtrl'
   });
   $urlRouterProvider
-  .otherwise('/'); 
+  .otherwise('/list'); 
 })
