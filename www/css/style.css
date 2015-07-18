@@ -1,1 +1,14 @@
 /* Empty. Add your own CSS if you like */
+
+.reservation-seating {
+  background-color: #FFFF99;
+}
+
+.reservation-closed {
+  background-color: #DDD;
+  font-style: italic;
+}
+
+.reservation-open {
+  /*background-color: #DDD;*/
+}

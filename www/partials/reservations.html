@@ -1,0 +1,43 @@
+<ion-view title="Reservations">
+  <ion-content padding="true">
+    <div class="reservation-list">
+      <div class="row">
+        <div class="col">
+          <h4 class="title">Name</h2>
+        </div>
+        <div class="col">
+          <h4 class="title">Party Size</h2>
+        </div>
+        <div class="col">
+          <h4 class="title">Controls</h2>
+        </div>
+      </div>
+      <ion-item collection-repeat="reservation in reservations" ng-class="getReservationRowClass(reservation)">
+        <div class="row">
+          <div class="col">
+            {{reservation.customerName}}
+          </div>
+          <div class="col">
+            {{reservation.partySize}}
+          </div>
+          <div class="col">
+            <div ng-hide="reservation.closed" class="reservation-controls">
+              <button ng-class="notifyButtonClass(reservation)" class="button">
+                Notify
+              </button>
+              <button class="button button-balanced">
+                Seated
+              </button>
+              <button class="button button-assertive">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </ion-item>
+    </div>
+    <button ng-click="openModal()" class="button buton-balanced">
+      Add Reservation
+    </button>
+  </ion-content>
+</ion-view>
