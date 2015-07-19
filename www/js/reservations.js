@@ -70,6 +70,15 @@ mesaControllers.controller('ReservationsCtrl', ['$scope', '$http', '$ionicModal'
   $scope.closeReservation = function(reservation) {
     doSomethingTo(reservation, '/close');
   };
+  $scope.seatCustomer = function(reservation) {
+    var id = reservation.userId;
+    var url = rootUrl + '/user/' + id + '/seated';
+    console.log(url);
+    $http.post(url)
+      .then(function(resp) {
+        $scope.getReservations();
+      });
+  };
 
   $ionicModal.fromTemplateUrl('partials/add_reservation_modal.html', {
     scope: $scope,
@@ -196,7 +205,7 @@ var mesaServices = angular.module('mesaServices', []);
 
 mesaServices.factory('restaurantInfo', function($timeout, $http) {
   var rootUrl = 'https://obscure-ocean-2327.herokuapp.com';
-  var restaurantId = "bakersfield_100";
+  var restaurantId = "senate_100";
 
   return {
     setRestaurantId: function(id) {
