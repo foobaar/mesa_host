@@ -1,5 +1,21 @@
 /* Empty. Add your own CSS if you like */
 
+.bar-positive, .bar.bar-positive, .bar.bar-positive .title, .tabs-positive>.tabs {
+  background-color: #ecddbb !important;
+  border-color:  rgb(141, 71, 24);
+  color: rgb(141, 71, 24);
+}
+
+.bar-positive .button.button-clear {
+  color: rgb(141, 71, 24);
+}
+
+.button.button-energized {
+  border-color: rgb(84, 41, 14);
+  background-color: rgb(141, 71, 24);
+  color: #fff;
+}
+
 .reservation-seating {
   background-color: #FFFF99;
 }
