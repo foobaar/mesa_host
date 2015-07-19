@@ -1,19 +1,27 @@
 var mesaControllers = angular.module('mesaControllers', []);
 
-mesaControllers.controller('ReservationsCtrl', ['$scope', '$http', '$ionicModal', 'restaurantInfo', function($scope, $http, $ionicModal, restaurantInfo) {
+mesaControllers.controller('ReservationsCtrl', ['$scope', '$http', '$ionicModal', 'restaurantInfo', '$timeout', function($scope, $http, $ionicModal, restaurantInfo, $timeout) {
   var rootUrl = 'https://obscure-ocean-2327.herokuapp.com';
+  var poll = function() {
+    $timeout(function() {
+      $scope.getReservations();
+      poll();
+    }, 5000);
+  };
+  poll();
   $scope.getReservations = function() {
-    $http.get(rootUrl + '/reservations/senate_100')
+    $http.get(rootUrl + '/reservations/' + restaurantInfo.getRestaurantId())
     .then(function(resp) {
       resp.data.sort(function(a, b) {
         if(a.closed) return 1;
         if(b.closed) return -1;
+        if(a.responded) return -1;
+        if(b.responded) return 1;
         if(a.seatingNow) return -1;
         if(b.seatingNow) return 1;
         return a.tStamp - b.tStamp;
       });
       $scope.reservations = resp.data;
-      console.log(resp);
     });
   };
 
@@ -32,13 +40,14 @@ mesaControllers.controller('ReservationsCtrl', ['$scope', '$http', '$ionicModal'
     if(reservation.seatingNow || reservation.closed) return "hidden";
     return "";
   };
-    
 
   $scope.getReservationRowClass = function(it) {
     if(it == null || typeof it == 'undefined') {
       return "";
     } else if(it.closed) {
       return "reservation-closed";
+    } else if(it.responded) {
+      return "reservation-accepted";
     } else if(it.seatingNow) {
       return "reservation-seating";
     } else {
@@ -113,6 +122,7 @@ mesaControllers.controller('ReservationsCtrl', ['$scope', '$http', '$ionicModal'
     "name": "",
     "partySize": "",
     "phoneNumber": "",
+    "waitTime": "",
     "notes": ""
   };
   
@@ -120,6 +130,7 @@ mesaControllers.controller('ReservationsCtrl', ['$scope', '$http', '$ionicModal'
     "customerName": "",
     "partySize": "",
     "userId": "",
+    "waitTime": "",
     "notes": "",
     "tStamp": 0
   };
@@ -131,6 +142,7 @@ mesaControllers.controller('ReservationsCtrl', ['$scope', '$http', '$ionicModal'
   $scope.newReservation = Object.create(emptyReservation);
   $scope.reservationDetail = Object.create(emptyModel);
   $scope.expectedWait = Object.create(emptyWait);
+  $scope.expectedWait.minutes = "";
 
   var resetAddModal = function() {
     $scope.addModal.hide();
@@ -143,6 +155,7 @@ mesaControllers.controller('ReservationsCtrl', ['$scope', '$http', '$ionicModal'
       customerName: $scope.newReservation.name,
       partySize: $scope.newReservation.partySize,
       restaurantId: restaurantInfo.getRestaurantId(),
+      waitTime: $scope.newReservation.waitTime,
       notes: $scope.newReservation.notes
     };
     console.log(request);
@@ -158,7 +171,7 @@ mesaControllers.controller('ReservationsCtrl', ['$scope', '$http', '$ionicModal'
       waitTime: $scope.expectedWait.minutes
     };
     console.log(request);
-    $http.post(rootUrl + '/restaurants/' + restaurantInfo.getRestaurantId() + '/expectedWaitTime')
+    $http.post(rootUrl + '/restaurants/' + restaurantInfo.getRestaurantId() + '/waitTime', request)
       .then(function(resp) {
         $scope.closeTimeModal();
       });
@@ -170,22 +183,30 @@ mesaControllers.controller('ReservationsCtrl', ['$scope', '$http', '$ionicModal'
     return "";
   };
 
-
   $scope.getReservations();
+  $http.get(rootUrl + '/restaurants/' + restaurantInfo.getRestaurantId())
+  .then(function(resp) {
+    $scope.expectedWait.minutes = resp.data[0].waitTime;
+  });
 
   return $scope;
 }]);
 
 var mesaServices = angular.module('mesaServices', []);
 
-mesaServices.factory('restaurantInfo', function() {
-  var restaurantId = "senate_100";
+mesaServices.factory('restaurantInfo', function($timeout, $http) {
+  var rootUrl = 'https://obscure-ocean-2327.herokuapp.com';
+  var restaurantId = "bakersfield_100";
+
   return {
     setRestaurantId: function(id) {
       restaurantId = id;
     },
     getRestaurantId: function() {
       return restaurantId;
+    },
+    getCurrentWaitTime: function() {
+      return info.restaurant.waitTime;
     }
   };
 });

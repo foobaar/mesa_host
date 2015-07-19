@@ -4,6 +4,10 @@
   background-color: #FFFF99;
 }
 
+.reservation-accepted {
+  background-color: #91FF6C;
+}
+
 .reservation-closed {
   background-color: #DDD;
   font-style: italic;
