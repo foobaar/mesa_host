@@ -20,11 +20,16 @@ angular.module('starter', ['ionic', 'mesaControllers', 'mesaServices'])
 
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
+  .state('login', {
+    url: '/',
+    templateUrl: 'partials/login.html',
+    controller: 'LoginCtrl'
+  })
   .state('list', {
     url: '/list',
     templateUrl: 'partials/reservations.html',
     controller: 'ReservationsCtrl'
   });
   $urlRouterProvider
-  .otherwise('/list'); 
+  .otherwise('/'); 
 })

@@ -205,7 +205,7 @@ var mesaServices = angular.module('mesaServices', []);
 
 mesaServices.factory('restaurantInfo', function($timeout, $http) {
   var rootUrl = 'https://obscure-ocean-2327.herokuapp.com';
-  var restaurantId = "senate_100";
+  var restaurantId = "bakersfield_100";
 
   return {
     setRestaurantId: function(id) {
@@ -219,3 +219,13 @@ mesaServices.factory('restaurantInfo', function($timeout, $http) {
     }
   };
 });
+
+
+mesaControllers.controller('LoginCtrl', ['restaurantInfo', '$state', '$scope',
+function(restaurantInfo, $state, $scope) {
+  $scope.restaurant = {"id": ""};
+  $scope.setRestaurantId = function() {
+    restaurantInfo.setRestaurantId($scope.restaurant.id);
+    $state.go('list');
+  }; 
+}]);
