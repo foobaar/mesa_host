@@ -1,11 +1,11 @@
 <ion-view title="Reservations">
   <ion-header-bar class="bar-positive">
-      <h2 class="title">Reservations</h2>
-      <div class="pull-left">
-        <button ng-click="openTimeModal()" class="button button-energized ion-clock button-custom icon-left">
-          &nbsp;Wait Time: {{expectedWait.minutes}}m
-        </button>
-      </div>
+    <h2 class="title">{{getRestaurantId()}}</h2>
+    <div class="pull-left">
+      <button ng-click="openTimeModal()" class="button button-energized ion-clock button-custom icon-left">
+        &nbsp;Wait Time: {{expectedWait.minutes}}m
+      </button>
+    </div>
   </ion-header-bar>
   <ion-content padding="true">
     <div class="reservation-list padding">

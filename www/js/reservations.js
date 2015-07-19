@@ -158,6 +158,10 @@ mesaControllers.controller('ReservationsCtrl', ['$scope', '$http', '$ionicModal'
     $scope.newReservation = Object.create(emptyReservation);
   };
 
+  $scope.getRestaurantId = function() {
+    return restaurantInfo.getRestaurantId();
+  };
+
   $scope.submitReservation = function() {
     var request = {
       userId: $scope.newReservation.phoneNumber,
