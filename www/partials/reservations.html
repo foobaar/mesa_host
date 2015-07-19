@@ -1,15 +1,29 @@
 <ion-view title="Reservations">
+  <ion-header-bar class="bar-positive">
+      <h2 class="title">Reservations</h2>
+      <div>
+        <button ng-click="openTimeModal()" class="button button-balanced">
+          Set Expected Wait
+        </button>
+        <button ng-click="openAddModal()" class="button button-balanced">
+          Add Reservation
+        </button>
+      </div>
+  </ion-header-bar>
   <ion-content padding="true">
     <div class="reservation-list padding">
       <div class="row">
         <div class="col">
-          <h4 class="title">Name</h2>
+          <h4 class="title">Name</h4>
         </div>
         <div class="col">
-          <h4 class="title">Party Size</h2>
+          <h4 class="title">Check-in Time</h4>
         </div>
         <div class="col">
-          <h4 class="title">Controls</h2>
+          <h4 class="title">Party Size</h4>
+        </div>
+        <div class="col-33 text-middle">
+          <h4 class="title">Controls</h4>
         </div>
       </div>
       <ion-item collection-repeat="reservation in reservations" ng-class="getReservationRowClass(reservation)">
@@ -18,26 +32,29 @@
             {{reservation.customerName}}
           </div>
           <div class="col text-middle">
+            {{getDateStringFor(reservation)}}
+          </div>
+          <div class="col text-middle">
             {{reservation.partySize}}
           </div>
-          <div class="col">
-            <div ng-hide="reservation.closed" class="reservation-controls">
-              <button ng-hide="reservation.seatingNow" ng-click="notifyCustomer(reservation)" class="button button-small">
+          <div class="col-33 text-middle">
+            <div class="reservation-controls">
+              <button ng-class="shouldHideNotify(reservation)" ng-click="notifyCustomer(reservation)" class="button button-positive">
                 Notify
               </button>
-              <button ng-click="closeReservation(reservation)" class="button button-small button-balanced">
+              <button ng-class="shouldHideActions(reservation)" ng-click="closeReservation(reservation)" class="button button-balanced">
                 Seated
               </button>
-              <button ng-click="closeReservation(reservation)" class="button button-small button-assertive">
-                Close
+              <button ng-click="openDetailModal(reservation)" class="button button-stable">
+                Details
+              </button>
+              <button ng-class="shouldHideActions(reservation)" ng-click="closeReservation(reservation)" class="button button-assertive">
+                Remove
               </button>
             </div>
           </div>
         </div>
       </ion-item>
     </div>
-    <button ng-click="openModal()" class="button buton-balanced">
-      Add Reservation
-    </button>
   </ion-content>
 </ion-view>

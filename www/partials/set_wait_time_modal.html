@@ -1,0 +1,19 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h2 class="title">Set Wait Time</h2>
+    <button ng-click="closeTimeModal()" class="button button-light">
+      Back
+    </button>
+  </ion-header-bar>
+  <ion-content>
+  <div ng-model="newReservation" class="list padding">
+    <label class="item item-input item-stacked-label">
+      <span class="input-label">Expected Wait Time</span>
+      <input ng-model="expectedWait.minutes" type="text" placeholder="Time in minutes (e.g. 90)"/>
+    </label>
+    <button ng-click="updateWaitTime()" class="button button-balanced button-block">
+      Submit
+    </button>
+  </div>
+  </ion-content>
+</ion-modal-view>

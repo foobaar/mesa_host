@@ -6,17 +6,33 @@ mesaControllers.controller('ReservationsCtrl', ['$scope', '$http', '$ionicModal'
     $http.get(rootUrl + '/reservations/senate_100')
     .then(function(resp) {
       resp.data.sort(function(a, b) {
-        if(a.closed || b.seatingNow) {
-          return 1;
-        } else if(b.closed || a.seatingNow) {
-          return -1;
-        }
-        return a.timestamp - b.timestamp;
+        if(a.closed) return 1;
+        if(b.closed) return -1;
+        if(a.seatingNow) return -1;
+        if(b.seatingNow) return 1;
+        return a.tStamp - b.tStamp;
       });
       $scope.reservations = resp.data;
       console.log(resp);
     });
   };
+
+  $scope.getDateStringFor = function(reservation) {
+    return new Date(parseInt(reservation.tStamp)).toLocaleTimeString();
+  };
+
+  $scope.shouldHideActions = function(reservation) {
+    if(typeof reservation == 'undefined') return "";
+    if(reservation.closed) return "hidden";
+    return "";
+  };
+
+  $scope.shouldHideNotify = function(reservation) {
+    if(typeof reservation == 'undefined') return "";
+    if(reservation.seatingNow || reservation.closed) return "hidden";
+    return "";
+  };
+    
 
   $scope.getReservationRowClass = function(it) {
     if(it == null || typeof it == 'undefined') {
@@ -50,37 +66,74 @@ mesaControllers.controller('ReservationsCtrl', ['$scope', '$http', '$ionicModal'
     scope: $scope,
     animation: 'slide-in-up'
   }).then(function(modal) {
-    $scope.modal = modal;
+    $scope.addModal = modal;
   });
-  $scope.openModal = function() {
-    $scope.modal.show();
+  $ionicModal.fromTemplateUrl('partials/reservation_detail_modal.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.detailModal = modal;
+  });
+  $ionicModal.fromTemplateUrl('partials/set_wait_time_modal.html', {
+    scope: $scope,
+    animation: 'slide-in-up' 
+  }).then(function(modal) {
+    $scope.timeModal = modal;
+  });
+
+  $scope.openAddModal = function() {
+    $scope.addModal.show();
   };
-  $scope.closeModal = function() {
-    $scope.modal.hide();
+  $scope.closeAddModal = function() {
+    $scope.addModal.hide();
   };
-  //Cleanup the modal when we're done with it!
+  $scope.openDetailModal = function(reservation) {
+    $scope.reservationDetail = reservation;
+    $scope.detailModal.show();
+  };
+  $scope.closeDetailModal = function() {
+    $scope.reservationDetail = Object.create(emptyModel);;
+    $scope.detailModal.hide();
+  };
+  $scope.openTimeModal = function(reservation) {
+    $scope.reservationTime = reservation;
+    $scope.timeModal.show();
+  };
+  $scope.closeTimeModal = function() {
+    $scope.reservationTime = Object.create(emptyModel);;
+    $scope.timeModal.hide();
+  };
   $scope.$on('$destroy', function() {
-    $scope.modal.remove();
-  });
-  // Execute action on hide modal
-  $scope.$on('modal.hidden', function() {
-    // Execute action
-  });
-  // Execute action on remove modal
-  $scope.$on('modal.removed', function() {
-    // Execute action
+    $scope.addModal.remove();
+    $scope.detailModal.remove();
+    $scope.timeModal.remove();
   });
 
   var emptyReservation = {
     "name": "",
     "partySize": "",
-    "phoneNumber": ""
+    "phoneNumber": "",
+    "notes": ""
+  };
+  
+  var emptyModel = {
+    "customerName": "",
+    "partySize": "",
+    "userId": "",
+    "notes": "",
+    "tStamp": 0
+  };
+
+  var emptyWait = {
+    "minutes": ""
   };
 
   $scope.newReservation = Object.create(emptyReservation);
+  $scope.reservationDetail = Object.create(emptyModel);
+  $scope.expectedWait = Object.create(emptyWait);
 
-  var resetModal = function() {
-    $scope.modal.hide();
+  var resetAddModal = function() {
+    $scope.addModal.hide();
     $scope.newReservation = Object.create(emptyReservation);
   };
 
@@ -89,15 +142,35 @@ mesaControllers.controller('ReservationsCtrl', ['$scope', '$http', '$ionicModal'
       userId: $scope.newReservation.phoneNumber,
       customerName: $scope.newReservation.name,
       partySize: $scope.newReservation.partySize,
-      restaurantId: restaurantInfo.getRestaurantId()
+      restaurantId: restaurantInfo.getRestaurantId(),
+      notes: $scope.newReservation.notes
     };
     console.log(request);
     $http.post(rootUrl + '/reservations', request)
       .then(function(resp) {
-        resetModal();
+        resetAddModal();
         $scope.getReservations();
       });
   };
+
+  $scope.updateWaitTime = function() {
+    var request = {
+      waitTime: $scope.expectedWait.minutes
+    };
+    console.log(request);
+    $http.post(rootUrl + '/restaurants/' + restaurantInfo.getRestaurantId() + '/expectedWaitTime')
+      .then(function(resp) {
+        $scope.closeTimeModal();
+      });
+  };
+
+  $scope.shouldHideControls = function(reservation) {
+    if(typeof reservation == 'undefined') return "";
+    if(reservation.closed) return "hidden";
+    return "";
+  };
+
+
   $scope.getReservations();
 
   return $scope;

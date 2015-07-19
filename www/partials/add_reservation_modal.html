@@ -16,6 +16,10 @@
       <span class="input-label">Party Size</span>
       <input ng-model="newReservation.partySize" type="text" placeholder="#">
     </label>
+    <label class="item item-input item-stacked-label">
+      <span class="input-label">Notes</span>
+      <textarea ng-model="newReservation.notes" placeholder="Additonal info"></textarea>
+    </label>
     <button ng-click="submitReservation()" class="button button-balanced button-block">
       Submit
     </button>

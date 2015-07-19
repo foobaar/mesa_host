@@ -1,0 +1,32 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h2 class="title">Reservation Details</h2>
+    <button ng-click="closeDetailModal()" class="button button-light">
+      Back
+    </button>
+  </ion-header-bar>
+  <ion-content>
+  <div class="padding">
+    <h4 class="title">Name</h4>
+    <p class="padding-left">
+    {{reservationDetail.customerName}}
+    </p>
+    <h4 class="title">Phone Number</h4>
+    <p class="padding-left">
+    {{reservationDetail.userId}}
+    </p>
+    <h4 class="title">Party Size</h4>
+    <p class="padding-left">
+    {{reservationDetail.partySize}}
+    </p>
+    <h4 class="title">Check-in Time</h4>
+    <p class="padding-left">
+    {{getDateStringFor(reservationDetail)}}
+    </p>
+    <h4 class="title">Notes</h4>
+    <p class="padding-left">
+    {{reservationDetail.notes}}
+    </p>
+  </div>
+  </ion-content>
+</ion-modal-view>

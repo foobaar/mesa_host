@@ -17,3 +17,7 @@
   display: flex;
   align-items: center; /* align vertical */
 }
+
+.hidden {
+  visibility: hidden;
+}
