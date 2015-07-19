@@ -1,12 +1,9 @@
 <ion-view title="Reservations">
   <ion-header-bar class="bar-positive">
       <h2 class="title">Reservations</h2>
-      <div>
-        <button ng-click="openTimeModal()" class="button button-balanced">
-          Set Expected Wait
-        </button>
-        <button ng-click="openAddModal()" class="button button-balanced">
-          Add Reservation
+      <div class="pull-left">
+        <button ng-click="openTimeModal()" class="button button-energized ion-clock button-custom icon-left">
+          &nbsp;Wait Time: {{expectedWait.minutes}}m
         </button>
       </div>
   </ion-header-bar>
@@ -57,4 +54,12 @@
       </ion-item>
     </div>
   </ion-content>
+  <ion-footer-bar class="bar-light">
+    <div class="pull-left">
+      <h4>Total Open Reservations: {{getTotalOpenReservations()}}</h4>
+    </div>
+    <button ng-click="openAddModal()" class="button button-balanced ion-plus icon-right pull-right">
+      Add &nbsp;
+    </button>
+  </ion-footer-bar>
 </ion-view>

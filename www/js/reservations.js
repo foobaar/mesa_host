@@ -192,6 +192,15 @@ mesaControllers.controller('ReservationsCtrl', ['$scope', '$http', '$ionicModal'
     return "";
   };
 
+  $scope.getTotalOpenReservations = function() {
+    if(typeof $scope.reservations == 'undefined') return 0;
+    var total = 0;
+    $scope.reservations.forEach(function(it) {
+      if(!it.closed) total++;
+    });
+    return total;
+  };
+
   $scope.getReservations();
   $http.get(rootUrl + '/restaurants/' + restaurantInfo.getRestaurantId())
   .then(function(resp) {
@@ -226,6 +235,6 @@ function(restaurantInfo, $state, $scope) {
   $scope.restaurant = {"id": ""};
   $scope.setRestaurantId = function() {
     restaurantInfo.setRestaurantId($scope.restaurant.id);
-    $state.go('list');
+    $state.go('list', {}, {reload: true});
   }; 
 }]);
